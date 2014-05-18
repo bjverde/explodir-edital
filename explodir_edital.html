@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>Explodir edital - versão 0.0.1</title>
+
+<script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+<!-- <script src="jquery-2.1.0.min.js"></script> -->
+<style type="text/css">
+	#IE{
+		background-color:yellow;
+		font-weight: bold;
+	}
+</style>
+
+<script>
+function quebraLinha(data){
+	return data.replace(/\n/g, ' ');
+}
+
+function materia(data){
+   var re = /([A-ZÇÃÕÂÊÎÔÛÁÉÍÓÚ-]*\s{1})*[A-ZÇÃÕÂÊÎÔÛÁÉÍÓÚ-]+[:]{1}\s{1}/g;
+	data = data.replace(re, '\n\n#$&');
+	return data;
+}
+
+function numercao(data){
+   var re = /(\.)(\s+)(\d{1,2}\.{0,1}\d{0,2}\s+)/g;
+	data = data.replace(re, '$1\n$3');
+	return data;
+}
+
+function doisPontos(data){
+	data = data.replace(/: /g, ':\n');
+	return data;
+}
+
+function pontoVirgula(data){
+	var re = /(;\s+)(\w+)/g;
+	data = data.replace(re, '\n$1$2');
+	return data;
+}
+
+function virgula(data){
+	var re = /(, )(\w+)/g;
+	data = data.replace(re, ',\n$1$2');
+	return data;
+}
+
+function eee(data){
+   var re = /( +)(e)( +)/g;
+	data = data.replace(re, '$1\n$2$3');
+	return data;
+}
+
+function ponto(data){
+	var re = /(\w+\){0,1}\.)(\s+)(\d+\.)/g;
+	data = data.replace(re, '$1\n$3');
+	return data;
+}
+
+function formata() {
+	var data = $('#input').val(); // texto bruto com entradas separadas por barra	
+	data = quebraLinha(data);
+	data = materia(data);	
+	data = numercao(data);
+	data = doisPontos(data);
+	data = pontoVirgula(data);
+	data = virgula(data);
+	data = eee(data);
+	data = ponto(data);
+	$('#output').val(data);
+}
+
+$(document).ready(function() {
+	$('#vai').submit(function() {
+		formata();
+		return false;
+	});
+});
+</script>
+</head>
+<body>
+
+<!-- Verificando se é a droga do IE -->
+<!--[if lte IE 8]>
+<div id="IE">
+<p>Olá Concurseiro,
+<br>Você está usando o Internet Explorer 8 ou uma versão mais velha ainda. Infelizmente esse site não irá funcionar. Atualize seu navegador ou mude para um que funcione.</p>
+<p> Recomendo o Firefox !! Clique <a href="http://www.mozilla.org/pt-BR/download/">aqui para baixar (fazer download)</a></p>
+<p> Outra opção é Chrome. Clique <a href="http://www.google.com/intl/pt-BR/chrome/">aqui para baixar (fazer download)</a></p>
+</div>
+<![endif]-->
+
+	
+	<form id="vai">
+		<label for="input">Entrada: Cole o texto do seu edital</label>
+		<br></br><textarea id="input" rows="14" cols="130" required></textarea>	
+		<p><input type="submit" value="Processar"/></p>
+	</form>
+	<br></br>
+	<hr></hr>
+	<p>Saída: Resultado Formatado</p>
+	<textarea id="output" rows="30" cols="130">(saída...)</textarea>
+
+</html>
