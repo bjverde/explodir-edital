@@ -19,7 +19,7 @@
 -->
 <head>
 <meta charset="UTF-8"/>
-<title>Explodir edital - versão 1.1.0</title>
+<title>Explodir edital - versão 1.1.1</title>
 
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -40,8 +40,7 @@
   });
 </script>
 	
-<script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
-<!-- <script src="jquery-2.1.0.min.js"></script> -->
+<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
 <style type="text/css">
 	.main {
 		font-size: 15px;
@@ -103,8 +102,14 @@
 	   $("#"+divId).toggle();
 	}
 
-	function quebraLinha(data){
+	function limpaQuebraLinha(data){
 		return data.replace(/\n/g, ' ');
+	}
+
+	function limpaEspacoDuplo(data){
+		var re = /(\s{2,})/g;
+		data = data.replace(re, ' ');
+		return data;
 	}
 
 	function materia(data){
@@ -119,8 +124,15 @@
 		return data;
 	}
 
+	function doisPontosNumero(data){
+		var re = /(:)(\s+)(\d+)/g;
+		data = data.replace(re, '$1\n$3');		
+		return data;
+	}	
+	
 	function doisPontos(data){
-		data = data.replace(/: /g, ':\n');
+		var re = /(:)(\s+)/g;
+		data = data.replace(re, '$1   ');		
 		return data;
 	}
 
@@ -131,7 +143,7 @@
 	}
 
 	function virgula(data){
-		var re = /(, )(\w+)/g;
+		var re = /(,\s+)(\w+)/g;
 		data = data.replace(re, '\n   $1$2');
 		return data;
 	}
@@ -168,15 +180,17 @@
 
 	function formata() {
 		var data = $('#input').val(); // texto bruto com entradas separadas por barra	
-		data = quebraLinha(data);
-		data = materia(data);	
-		data = numercao(data);
+		data = limpaQuebraLinha(data);
+		data = limpaEspacoDuplo(data);
+		data = materia(data);
+		data = doisPontosNumero(data);
 		data = doisPontos(data);
 		data = pontoVirgula(data);
 		data = virgula(data);
-		data = eee(data);
 		data = pontoNumero(data);
 		data = ponto(data);
+		data = numercao(data);
+		data = eee(data);
 		data = subItem(data);
 		data = subSubItem(data);
 		$('#output').val(data);
@@ -244,6 +258,7 @@
 	<p><a href="javascript:toggleDiv('changelog');">Changelog ou lista de modificações</a></p>
 	<div id="changelog" class="alert-box warning">	
 		<ul>
+			<li>2019-01 1.1.1 - correção do espaço duplo</li>
 			<li>2015-03 1.1.0 - primeira identação e css</li>
 			<li>2014-06 1.0.1 - correção de bug</li>
 			<li>2014-05 1.0.0 - primeira versão</li>
